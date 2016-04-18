@@ -1,0 +1,14 @@
+CFLAGS +=-DDEFAULT_UART=1
+
+${OUTPUT}.elf: sys/arm/a9/bootstrap.o
+${OUTPUT}.elf: sys/arm/a9/gic.o
+${OUTPUT}.elf: sys/arm/a9/arm.o
+${OUTPUT}.elf: sys/drivers/serial/zynq_serial.o
+${OUTPUT}.elf: sys/boards/zedboard.o
+
+#LIB_PATH =-L/home/z/bin/arm_toolchain/gcc-arm-none-eabi-4_9-2015q1/lib/gcc/arm-none-eabi/4.9.3/ 
+#LIB_LINK =-lgcc
+
+${OUTPUT}.elf:
+	${LD} -T sys/arm/a9/zynq/linker.ld --entry 0x00000000 ${LDFLAGS} -o ${@} $(filter %.o %.a, ${^}) ${LIB_PATH} ${LIB_LINK} 
+	@size ${OUTPUT}.elf
